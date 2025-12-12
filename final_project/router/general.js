@@ -20,7 +20,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   const isbn = req.params.isbn;
   const book = books[isbn];
-  
+
   if (book == undefined)
     res.send(404);
 
@@ -29,8 +29,14 @@ public_users.get('/isbn/:isbn',function (req, res) {
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const authorToFilter = req.params.author;
+
+    const matchingId = Object.keys(books).filter(id => 
+        books[id].author.toLowerCase().includes(authorToFilter.toLowerCase())
+    );
+
+    const matchingBooks = matchingId.map(id => books[id]);
+    res.send(matchingBooks);
 });
 
 // Get all books based on title
