@@ -78,6 +78,25 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
       });
 });
 
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    const book = books[isbn];
+    if (book == undefined){
+      return res.status(404).json({ message: "Book not found." });  
+    }
+    
+    const reviewer = req.session.authorization.username;
+
+    if (book.reviews[reviewer] == undefined) {
+        return res.status(404).json({ message: "Review not found." });
+    }
+
+    delete book.reviews[reviewer];
+    return res.status(200).json({
+        message: "Review deleted successfully"
+    });
+});
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
